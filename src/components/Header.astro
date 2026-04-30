@@ -196,10 +196,17 @@ const path = Astro.url.pathname;
   }
 
   .header.is-scrolled {
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(10, 10, 10, 0.96);
     border-bottom-color: var(--border);
+  }
+
+  /* Blur only on desktop where it's cheap; mobile uses a solid background. */
+  @media (hover: hover) and (min-width: 768px) {
+    .header.is-scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
   }
 
   .header__inner {
