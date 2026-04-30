@@ -10,7 +10,7 @@ const { uri, title = 'Spotify player', height = 352 } = Astro.props;
 const src = `https://open.spotify.com/embed/${uri}?utm_source=generator&theme=0`;
 ---
 
-<div class="spotify">
+<div class="spotify" style={`--h:${height}px`}>
   <iframe
     src={src}
     title={title}
@@ -26,9 +26,15 @@ const src = `https://open.spotify.com/embed/${uri}?utm_source=generator&theme=0`
   .spotify {
     border: 1px solid var(--border);
     background: var(--bg-elev);
+    /* Reserve exact space; prevent Spotify's iframe from nudging layout after load */
+    height: var(--h);
+    overflow: hidden;
+    contain: layout paint;
   }
   .spotify iframe {
     display: block;
+    width: 100%;
+    height: 100%;
     background: transparent;
   }
 </style>
