@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Lost in the Void" description="Page not found.">
+  <section class="section nf">
+    <div class="container nf__inner">
+      <p class="eyebrow">404</p>
+      <h1>Lost in the Void</h1>
+      <p>That page doesn't exist. The legion has moved on.</p>
+      <a class="btn btn--primary" href="/">Return Home</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner {
+    text-align: center;
+    padding-block: 4rem;
+  }
+  .nf__inner p {
+    margin-inline: auto;
+  }
+</style>

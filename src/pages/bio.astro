@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { members, formerBands } from '../data/members';
+---
+
+<BaseLayout
+  title="Bio"
+  description="Berzerker Legion — international death metal formed in 2016 by veterans of Hypocrisy, Asphyx, Dark Funeral, and Vader. Two albums of relentless brutality."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Origins</p>
+      <h1 class="reveal">The Legion</h1>
+
+      <div class="bio reveal">
+        <p>
+          Berzerker Legion is an international death metal band formed in 2016
+          by members of {formerBands.join(', ')}. Combining elements of
+          old-school brutality and solid harmonies, they quickly gained
+          recognition for their intense sound and relentless energy.
+        </p>
+        <p>
+          Their debut album, <em>Obliterate the Weak</em>, was released in 2020
+          and showcased their raw, uncompromising approach to death metal. In
+          2023, the band followed up with their second album, <em>Chaos Will
+          Reign</em>, further refining their sound with heavier riffs and
+          intricate compositions. The album received strong praise from the
+          metal community and solidified their place in the extreme music
+          scene.
+        </p>
+        <p>
+          With the addition of new member Harris Sopovic in 2024, Berzerker
+          Legion continues to push their boundaries while staying true to their
+          roots. They remain committed to delivering powerful performances and
+          uncompromising death metal to audiences worldwide.
+        </p>
+      </div>
+
+      <div class="lineup reveal">
+        <h2>Lineup</h2>
+        <ul class="lineup__list">
+          {
+            members.map((m) => (
+              <li class="lineup__item">
+                <p class="lineup__name">{m.name}</p>
+                <p class="lineup__role">{m.role}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="lineup__note">
+          Members of <strong>{formerBands.join(', ')}</strong>.
+        </p>
+      </div>
+
+      <div class="gallery reveal">
+        <h2>Live</h2>
+        <div class="gallery__grid">
+          {
+            [1, 2, 3, 4, 5, 6].map((n) => (
+              <figure class="gallery__item">
+                <img
+                  src={`/images/live/live-${n}.jpg`}
+                  alt={`Berzerker Legion live, photo ${n}`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bio {
+    margin-block: 2rem;
+  }
+  .bio p {
+    font-size: 1.05rem;
+  }
+  .bio em {
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .lineup {
+    margin-block: 3rem;
+  }
+  .lineup__list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .lineup__item {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+  }
+  .lineup__name {
+    margin: 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    font-size: 1.2rem;
+  }
+  .lineup__role {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .lineup__note {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .gallery {
+    margin-top: 3rem;
+  }
+  .gallery__grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .gallery__item {
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.05);
+    transition: filter 320ms var(--ease), transform 600ms var(--ease);
+  }
+  .gallery__item:hover img,
+  .gallery__item:focus-within img {
+    filter: grayscale(0) contrast(1.05);
+    transform: scale(1.04);
+  }
+</style>

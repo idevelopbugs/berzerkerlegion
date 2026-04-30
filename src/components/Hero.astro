@@ -1,0 +1,157 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="hero" aria-label="Berzerker Legion">
+  <img
+    class="hero__bg"
+    src="/images/hero-landscape.jpg"
+    alt=""
+    width="1920"
+    height="1280"
+    fetchpriority="high"
+    decoding="async"
+  />
+  <div class="hero__veil" aria-hidden="true"></div>
+
+  <div class="hero__content container">
+    <img
+      class="hero__logo"
+      src="/images/logo-white.png"
+      alt={`${site.name} logo`}
+      width="780"
+      height="780"
+      fetchpriority="high"
+      decoding="async"
+    />
+    <p class="hero__tag">{site.tagline} — Since {site.foundingDate}</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#shows">See Tour Dates</a>
+      <a class="btn" href="/discography/">Listen</a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#shows" aria-label="Scroll to shows">
+    <span></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: clamp(560px, 90vh, 900px);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    margin-top: -1px; /* sit beneath sticky header cleanly */
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -2;
+    filter: grayscale(1) contrast(1.05) brightness(0.55);
+    transform: scale(1);
+    animation: kenburns 30s ease-in-out infinite alternate;
+  }
+
+  .hero__veil {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse at center, transparent 30%, #000 110%),
+      linear-gradient(180deg, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85));
+  }
+
+  .hero__content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding-block: 4rem;
+    animation: fadeUp 800ms var(--ease) both;
+  }
+
+  .hero__logo {
+    width: min(78vw, 620px);
+    height: auto;
+    filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.7));
+  }
+
+  .hero__tag {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 44px;
+    border: 1px solid var(--ink-dim);
+    border-radius: 14px;
+    display: grid;
+    place-items: start center;
+    padding-top: 6px;
+    opacity: 0.7;
+  }
+
+  .hero__scroll span {
+    width: 2px;
+    height: 8px;
+    background: var(--ink);
+    animation: bounce 1.6s infinite;
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(8px);
+      opacity: 0.3;
+    }
+  }
+</style>

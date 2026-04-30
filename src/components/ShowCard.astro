@@ -1,0 +1,180 @@
+---
+import type { Show } from '../data/shows';
+import { site } from '../data/site';
+
+interface Props { show: Show; }
+const { show } = Astro.props;
+
+const d = new Date(show.date);
+const day = d.toLocaleDateString('en-US', { day: '2-digit' });
+const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+const year = d.getFullYear();
+const time = d.toLocaleTimeString('en-US', {
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+const eventLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicEvent',
+  name: show.festival
+    ? `${site.name} at ${show.festival}`
+    : `${site.name} live in ${show.city}`,
+  startDate: show.date,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: show.venue,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: show.city,
+      addressCountry: show.country,
+    },
+  },
+  performer: { '@type': 'MusicGroup', name: site.name },
+  ...(show.ticketUrl
+    ? {
+        offers: {
+          '@type': 'Offer',
+          url: show.ticketUrl,
+          availability: show.soldOut
+            ? 'https://schema.org/SoldOut'
+            : 'https://schema.org/InStock',
+        },
+      }
+    : {}),
+};
+---
+
+<article class="show reveal">
+  <div class="show__date" aria-hidden="true">
+    <span class="show__month">{month}</span>
+    <span class="show__day">{day}</span>
+    <span class="show__year">{year}</span>
+  </div>
+  <div class="show__body">
+    <p class="show__venue">
+      {show.festival ? show.festival : show.venue}
+    </p>
+    <p class="show__loc">
+      {show.city}, {show.country}
+      {!show.festival && show.venue ? <span> · {show.venue}</span> : null}
+      <span class="show__time"> · {time}</span>
+    </p>
+  </div>
+  <div class="show__action">
+    {
+      show.soldOut ? (
+        <span class="show__sold">Sold Out</span>
+      ) : show.ticketUrl ? (
+        <a
+          class="btn"
+          href={show.ticketUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Tickets
+        </a>
+      ) : (
+        <span class="show__sold">Soon</span>
+      )
+    }
+  </div>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(eventLd)}
+  />
+</article>
+
+<style>
+  .show {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    transition: border-color 220ms var(--ease), background 220ms var(--ease);
+  }
+
+  .show:hover {
+    border-color: var(--blood);
+  }
+
+  .show__date {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    padding: 0.5rem 0;
+    border: 1px solid var(--border);
+    background: #050505;
+  }
+
+  .show__month {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--blood-bright);
+  }
+  .show__day {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .show__year {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .show__body {
+    min-width: 0;
+  }
+
+  .show__venue {
+    margin: 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+
+  .show__loc {
+    margin: 0.25rem 0 0;
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+  }
+
+  .show__time {
+    color: var(--muted);
+  }
+
+  .show__action {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .show__sold {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 1px dashed var(--muted);
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 720px) {
+    .show {
+      grid-template-columns: auto 1fr auto;
+    }
+    .show__action {
+      grid-column: auto;
+      justify-self: end;
+    }
+  }
+</style>

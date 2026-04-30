@@ -1,0 +1,34 @@
+---
+interface Props {
+  /** Spotify URI fragment, e.g. 'artist/72MD4qOT5kUc5FMZ8eqxkX' or 'album/...' */
+  uri: string;
+  title?: string;
+  height?: number;
+}
+
+const { uri, title = 'Spotify player', height = 352 } = Astro.props;
+const src = `https://open.spotify.com/embed/${uri}?utm_source=generator&theme=0`;
+---
+
+<div class="spotify">
+  <iframe
+    src={src}
+    title={title}
+    width="100%"
+    height={height}
+    loading="lazy"
+    frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+<style>
+  .spotify {
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+  }
+  .spotify iframe {
+    display: block;
+    background: transparent;
+  }
+</style>

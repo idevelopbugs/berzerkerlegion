@@ -1,0 +1,196 @@
+---
+import { shows } from '../data/shows';
+import ShowCard from './ShowCard.astro';
+
+const now = Date.now();
+const cutoff = now - 86400000; // include shows from yesterday onwards as "upcoming"
+const upcoming = shows
+  .filter((s) => new Date(s.date).getTime() >= cutoff)
+  .sort((a, b) => +new Date(a.date) - +new Date(b.date));
+const past = shows
+  .filter((s) => new Date(s.date).getTime() < cutoff)
+  .sort((a, b) => +new Date(b.date) - +new Date(a.date));
+---
+
+<section class="section shows" id="shows" aria-labelledby="shows-title">
+  <div class="container">
+    <p class="eyebrow">On the Road</p>
+    <h2 id="shows-title">Upcoming Shows</h2>
+
+    {
+      upcoming.length === 0 ? (
+        <div class="shows__empty reveal">
+          <p>No shows announced — new dates land here first.</p>
+          <p class="shows__empty-sub">
+            Bookers and promoters: head to the{' '}
+            <a href="/press/">press / booking page</a>.
+          </p>
+        </div>
+      ) : (
+        <ul class="shows__list">
+          {upcoming.map((s) => (
+            <li>
+              <ShowCard show={s} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      past.length > 0 && (
+        <details class="past reveal">
+          <summary>
+            <span>Past Shows</span>
+            <span class="past__count">{past.length}</span>
+          </summary>
+          <ul class="past__list">
+            {past.map((s) => {
+              const d = new Date(s.date);
+              const dateLabel = d.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+              });
+              return (
+                <li class="past__item">
+                  <span class="past__date">{dateLabel}</span>
+                  <span class="past__name">
+                    {s.festival ? s.festival : s.venue}
+                  </span>
+                  <span class="past__loc">
+                    {s.city}, {s.country}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .shows__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .shows__empty {
+    border: 1px dashed var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background: var(--bg-elev);
+  }
+
+  .shows__empty p {
+    margin: 0;
+    color: var(--ink-dim);
+  }
+
+  .shows__empty-sub {
+    margin-top: 0.5rem !important;
+    font-size: 0.9rem;
+    color: var(--muted) !important;
+  }
+
+  .shows__empty a {
+    color: var(--blood-bright);
+    text-decoration: underline;
+  }
+
+  .past {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  .past summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    padding: 0.5rem 0;
+  }
+
+  .past summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .past summary::before {
+    content: '+';
+    display: inline-block;
+    width: 1.2em;
+    color: var(--blood-bright);
+    font-size: 1.1rem;
+    transition: transform 240ms var(--ease);
+  }
+
+  .past[open] summary::before {
+    content: '−';
+  }
+
+  .past__count {
+    color: var(--muted);
+  }
+
+  .past__list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .past__item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border);
+    background: #050505;
+    color: var(--ink-dim);
+    font-size: 0.9rem;
+  }
+
+  .past__date {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .past__name {
+    color: var(--ink);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .past__loc {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (min-width: 720px) {
+    .past__item {
+      grid-template-columns: 140px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+    }
+    .past__date {
+      font-size: 0.75rem;
+    }
+  }
+</style>

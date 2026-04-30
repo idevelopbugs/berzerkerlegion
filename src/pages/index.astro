@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ShowsList from '../components/ShowsList.astro';
+import SpotifyEmbed from '../components/SpotifyEmbed.astro';
+import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
+import { site, social } from '../data/site';
+
+const featuredVideo: string | null = 'https://www.youtube.com/watch?v=JZVa4dbeXmE';
+---
+
+<BaseLayout
+  title={undefined}
+  description={site.description}
+  isHome={true}
+>
+  <Hero />
+
+  <ShowsList />
+
+  <section class="section music" aria-labelledby="music-title">
+    <div class="container">
+      <p class="eyebrow">Listen</p>
+      <h2 id="music-title">The Sound</h2>
+      <p class="music__intro reveal">
+        Two albums of uncompromising death metal — stream below or follow on
+        Spotify for new releases.
+      </p>
+
+      <div class="music__grid reveal">
+        <div class="music__col">
+          {
+            featuredVideo ? (
+              <YouTubeEmbed video={featuredVideo} title="Berzerker Legion" />
+            ) : (
+              <a
+                class="music__yt-fallback"
+                href={social.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>Watch on YouTube →</span>
+                <small>Latest videos & live footage</small>
+              </a>
+            )
+          }
+        </div>
+        <div class="music__col">
+          <SpotifyEmbed
+            uri="artist/72MD4qOT5kUc5FMZ8eqxkX"
+            title="Berzerker Legion on Spotify"
+          />
+        </div>
+      </div>
+
+      <div class="music__cta reveal">
+        <a class="btn" href="/discography/">Full Discography →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section connect" aria-labelledby="connect-title">
+    <div class="container">
+      <p class="eyebrow">Stay Close</p>
+      <h2 id="connect-title">Follow / Contact</h2>
+      <div class="connect__grid reveal">
+        <SocialLinks variant="grid" />
+        <ObfuscatedEmail label="Booking & Press" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .music__intro {
+    margin-bottom: 2rem;
+  }
+
+  .music__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .music__yt-fallback {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    color: var(--ink);
+    text-align: center;
+    transition: border-color 200ms var(--ease), background 200ms var(--ease);
+  }
+  .music__yt-fallback:hover {
+    border-color: var(--blood);
+    background: #141414;
+  }
+  .music__yt-fallback span {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1.5rem;
+  }
+  .music__yt-fallback small {
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  .music__cta {
+    margin-top: 1.5rem;
+  }
+
+  .connect__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .music__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .connect__grid {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>

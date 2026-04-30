@@ -1,0 +1,144 @@
+---
+interface Props {
+  /** Full YouTube watch URL or 11-char video ID */
+  video: string;
+  title: string;
+}
+
+const { video, title } = Astro.props;
+
+function extractId(input: string): string {
+  if (/^[\w-]{11}$/.test(input)) return input;
+  try {
+    const u = new URL(input);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
+    if (u.searchParams.get('v')) return u.searchParams.get('v')!;
+    const m = u.pathname.match(/\/(embed|shorts)\/([\w-]{11})/);
+    if (m) return m[2];
+  } catch {
+    /* noop */
+  }
+  return input;
+}
+
+const id = extractId(video);
+const poster = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const watch = `https://www.youtube.com/watch?v=${id}`;
+---
+
+<div class="yt" data-yt-id={id}>
+  <button
+    class="yt__btn"
+    type="button"
+    aria-label={`Play video: ${title}`}
+    data-yt-play
+  >
+    <img
+      class="yt__poster"
+      src={poster}
+      alt=""
+      width="480"
+      height="360"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="yt__play" aria-hidden="true">
+      <svg viewBox="0 0 68 48" width="68" height="48">
+        <path
+          d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55 0 34 0 34 0S13 0 7.5 1.7a8.5 8.5 0 0 0-6 6A89 89 0 0 0 0 24a89 89 0 0 0 1.5 16.3 8.5 8.5 0 0 0 6 6C13 48 34 48 34 48s21 0 26.5-1.7a8.5 8.5 0 0 0 6-6A89 89 0 0 0 68 24a89 89 0 0 0-1.5-16.3Z"
+          fill="#8b0000"
+        ></path>
+        <path d="M27 34V14l18 10-18 10Z" fill="#fff"></path>
+      </svg>
+    </span>
+  </button>
+  <noscript>
+    <a href={watch} target="_blank" rel="noopener noreferrer">
+      Watch &quot;{title}&quot; on YouTube
+    </a>
+  </noscript>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.yt').forEach((wrap) => {
+    const btn = wrap.querySelector<HTMLButtonElement>('[data-yt-play]');
+    const id = wrap.getAttribute('data-yt-id');
+    if (!btn || !id) return;
+    btn.addEventListener(
+      'click',
+      () => {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute(
+          'src',
+          `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`
+        );
+        iframe.setAttribute('title', btn.getAttribute('aria-label') || 'Video');
+        iframe.setAttribute(
+          'allow',
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+        );
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('loading', 'eager');
+        iframe.setAttribute('frameborder', '0');
+        iframe.style.position = 'absolute';
+        iframe.style.inset = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        wrap.replaceChildren(iframe);
+      },
+      { once: true }
+    );
+  });
+</script>
+
+<style>
+  .yt {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .yt__btn {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .yt__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.4) brightness(0.75);
+    transition: filter 240ms var(--ease), transform 600ms var(--ease);
+  }
+
+  .yt__btn:hover .yt__poster,
+  .yt__btn:focus-visible .yt__poster {
+    filter: grayscale(0) brightness(0.9);
+    transform: scale(1.02);
+  }
+
+  .yt__play {
+    position: relative;
+    z-index: 2;
+    transition: transform 240ms var(--ease);
+    filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.6));
+  }
+
+  .yt__btn:hover .yt__play,
+  .yt__btn:focus-visible .yt__play {
+    transform: scale(1.08);
+  }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://berzerkerlegion.com/sitemap-index.xml

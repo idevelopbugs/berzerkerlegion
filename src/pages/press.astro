@@ -1,0 +1,259 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { site, social } from '../data/site';
+import { discography } from '../data/discography';
+import { formerBands } from '../data/members';
+
+const pressPhotos = [1, 2, 3, 4, 5, 6].map((n) => `/images/live/live-${n}.jpg`);
+---
+
+<BaseLayout
+  title="Press / Booking"
+  description="Berzerker Legion EPK — booking inquiries, press photos, technical info, and links for promoters, press, and labels."
+>
+  <section class="section press">
+    <div class="container">
+      <p class="eyebrow">EPK · Bookers · Press · Labels</p>
+      <h1 class="reveal">Press &amp; Booking</h1>
+
+      <div class="press__lead reveal">
+        <p>
+          {site.name} is an international death metal band formed in 2016 by
+          members of <strong>{formerBands.join(', ')}</strong>. Two full-length
+          albums released to date; available worldwide for festival,
+          headline, and support slots.
+        </p>
+      </div>
+
+      <div class="press__grid">
+        <section class="card reveal" aria-labelledby="contact-title">
+          <h2 id="contact-title">Contact</h2>
+          <p>For booking, press, and label inquiries:</p>
+          <ObfuscatedEmail label="Booking" />
+          <div class="card__socials">
+            <SocialLinks />
+          </div>
+        </section>
+
+        <section class="card reveal" aria-labelledby="facts-title">
+          <h2 id="facts-title">Quick Facts</h2>
+          <dl class="facts">
+            <dt>Formed</dt>
+            <dd>{site.foundingDate}</dd>
+            <dt>Genre</dt>
+            <dd>Death Metal</dd>
+            <dt>Members of</dt>
+            <dd>{formerBands.join(' · ')}</dd>
+            <dt>Discography</dt>
+            <dd>
+              {
+                discography
+                  .map((a) => `${a.title} (${a.year})`)
+                  .join(' · ')
+              }
+            </dd>
+            <dt>Spotify</dt>
+            <dd>
+              <a href={social.spotify} target="_blank" rel="noopener noreferrer">
+                Open profile →
+              </a>
+            </dd>
+            <dt>YouTube</dt>
+            <dd>
+              <a href={social.youtube} target="_blank" rel="noopener noreferrer">
+                Channel →
+              </a>
+            </dd>
+          </dl>
+        </section>
+
+        <section class="card reveal" aria-labelledby="assets-title">
+          <h2 id="assets-title">Press Assets</h2>
+          <p>
+            High-resolution band logo and press photos are available below.
+            Click any image to open full-size in a new tab.
+          </p>
+          <div class="assets">
+            <a
+              class="assets__logo"
+              href="/images/logo-white.png"
+              target="_blank"
+              rel="noopener"
+              aria-label="Open band logo"
+            >
+              <img
+                src="/images/logo-white.png"
+                alt="Berzerker Legion logo (white on transparent)"
+                loading="lazy"
+                decoding="async"
+              />
+              <span>Logo (PNG)</span>
+            </a>
+            <ul class="assets__photos">
+              {
+                pressPhotos.map((src, i) => (
+                  <li>
+                    <a
+                      href={src}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={`Press photo ${i + 1}`}
+                    >
+                      <img
+                        src={src}
+                        alt={`Berzerker Legion press photo ${i + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </section>
+
+        <section class="card reveal" aria-labelledby="bio-short-title">
+          <h2 id="bio-short-title">Short Bio</h2>
+          <p>
+            International death metal collective formed in 2016 from members
+            of <strong>Hypocrisy</strong>, <strong>Asphyx</strong>,
+            <strong>Dark Funeral</strong>, and <strong>Vader</strong>.
+            Old-school brutality, intricate compositions, relentless live
+            energy. Two albums: <em>Obliterate the Weak</em> (2020) and
+            <em>Chaos Will Reign</em> (2023).
+          </p>
+        </section>
+      </div>
+
+      <p class="press__share reveal">
+        Share this page directly with bookers and press: <code
+          >https://{site.domain}/press/</code>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .press__lead {
+    max-width: 70ch;
+    margin-block: 1rem 2.5rem;
+  }
+
+  .press__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    padding: 1.5rem;
+  }
+
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+
+  .card__socials {
+    margin-top: 1.25rem;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1.25rem;
+    margin: 0;
+  }
+  .facts dt {
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    align-self: center;
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--ink);
+  }
+  .facts a {
+    color: var(--blood-bright);
+  }
+
+  .assets {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .assets__logo {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: #050505;
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .assets__logo img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+  .assets__logo span {
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .assets__photos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
+  .assets__photos a {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .assets__photos img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition: filter 240ms var(--ease), transform 600ms var(--ease);
+  }
+  .assets__photos a:hover img,
+  .assets__photos a:focus-visible img {
+    filter: none;
+    transform: scale(1.05);
+  }
+
+  .press__share {
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .press__share code {
+    color: var(--ink);
+    background: var(--bg-elev);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border);
+  }
+
+  @media (min-width: 768px) {
+    .press__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SpotifyEmbed from '../components/SpotifyEmbed.astro';
+import { discography } from '../data/discography';
+import { site } from '../data/site';
+
+const albumsLd = discography.map((a) => ({
+  '@context': 'https://schema.org',
+  '@type': 'MusicAlbum',
+  name: a.title,
+  datePublished: String(a.year),
+  byArtist: { '@type': 'MusicGroup', name: site.name },
+}));
+---
+
+<BaseLayout
+  title="Discography"
+  description="Listen to Berzerker Legion: 'Chaos Will Reign' (2023) and 'Obliterate the Weak' (2020). Stream on Spotify, follow for new releases."
+>
+  <Fragment slot="head">
+    {
+      albumsLd.map((ld) => (
+        <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+      ))
+    }
+  </Fragment>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Discography</p>
+      <h1 class="reveal">The Records</h1>
+
+      <div class="albums">
+        {
+          discography.map((a) => (
+            <article class="album reveal">
+              <header class="album__head">
+                <h2 class="album__title">{a.title}</h2>
+                <span class="album__year">{a.year}</span>
+              </header>
+              {a.description ? (
+                <p class="album__desc">{a.description}</p>
+              ) : null}
+              <SpotifyEmbed
+                uri="artist/72MD4qOT5kUc5FMZ8eqxkX"
+                title={`${a.title} on Spotify`}
+                height={152}
+              />
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .albums {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .album {
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    padding: 1.5rem;
+  }
+
+  .album__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .album__title {
+    margin: 0;
+  }
+
+  .album__year {
+    color: var(--blood-bright);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+  }
+
+  .album__desc {
+    margin-bottom: 1rem;
+  }
+</style>
