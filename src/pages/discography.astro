@@ -41,10 +41,12 @@ const albumsLd = discography.map((a) => ({
               {a.description ? (
                 <p class="album__desc">{a.description}</p>
               ) : null}
-              <SpotifyEmbed
-                uri="artist/72MD4qOT5kUc5FMZ8eqxkX"
-                title={`${a.title} on Spotify`}
-              />
+              {a.spotifyAlbumId && (
+                <SpotifyEmbed
+                  uri={`album/${a.spotifyAlbumId}`}
+                  title={`${a.title} on Spotify`}
+                />
+              )}
             </article>
           ))
         }
