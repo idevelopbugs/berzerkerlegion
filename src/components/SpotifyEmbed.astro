@@ -26,8 +26,7 @@ const src = `https://open.spotify.com/embed/${uri}?utm_source=generator&theme=0`
   .spotify {
     border: 1px solid var(--border);
     background: var(--bg-elev);
-    /* Reserve exact space; prevent Spotify's iframe from nudging layout after load */
-    height: var(--h);
+    height: 400px;
     overflow: hidden;
     contain: layout paint;
   }
